@@ -123,7 +123,12 @@ export default function Home() {
         />
 
         <button
-          onClick={() => selected && router.push('/upload')}
+          onClick={() => {
+            if (selected) {
+               localStorage.setItem('prepiq_exam', selected)
+               router.push('/upload')
+            }
+}}
           style={{
             width: '100%',
             background: selected
