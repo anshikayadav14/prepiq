@@ -2,10 +2,17 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
 }
 
 body {
   background: #05050a;
   color: #f0eeff;
   font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+button {
+  cursor: pointer;
+  touch-action: manipulation;
 }
