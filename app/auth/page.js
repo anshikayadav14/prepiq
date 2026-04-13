@@ -1,7 +1,6 @@
 'use client'
 import { useState } from 'react'
 import { createClient } from '@/lib/supabase'
-const supabase = createClient()
 
 export default function AuthPage() {
   const [isLogin, setIsLogin] = useState(true)
@@ -22,25 +21,39 @@ export default function AuthPage() {
       return
     }
 
+    const supabase = createClient()
+
     if (isLogin) {
       const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-      console.log('Login data:', data)
-      console.log('Login error:', error)
       if (error) {
-        setError(error.message)
+        if (error.message.includes('Email not confirmed')) {
+          setError('Please verify your email first. Check your inbox!')
+        } else {
+          setError(error.message)
+        }
         setLoading(false)
       } else {
         window.location.href = '/dashboard'
       }
     } else {
       const { data, error } = await supabase.auth.signUp({ email, password })
-      console.log('Signup data:', data)
-      console.log('Signup error:', error)
       if (error) {
         setError(error.message)
         setLoading(false)
       } else {
-        if (data.user) {
+        if (data.user && !data.user.email_confirmed_at) {
+  // Pre-insert user row so it exists when they confirm email
+  await supabase.from('users').upsert({
+    id: data.user.id,
+    email: data.user.email,
+    plan: 'free',
+    generates_used: 0,
+    generates_reset_date: new Date().toISOString()
+  })
+  setMessage('✅ Check your email to verify your account! Click the link we sent you.')
+  setIsLogin(true)
+  setLoading(false)
+} else if (data.user) {
           await supabase.from('users').upsert({
             id: data.user.id,
             email: data.user.email,
@@ -48,9 +61,8 @@ export default function AuthPage() {
             generates_used: 0,
             generates_reset_date: new Date().toISOString()
           })
+          window.location.href = '/dashboard'
         }
-        setMessage('Account created! You can now login.')
-        setIsLogin(true)
         setLoading(false)
       }
     }

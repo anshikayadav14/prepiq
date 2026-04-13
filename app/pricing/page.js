@@ -190,7 +190,7 @@ export default function PricingPage() {
           Simple, Affordable Pricing
         </h2>
         <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1.1rem', margin: '0 0 16px' }}>
-          Less than a chai per week. Ace your exams with Prepiq. 🍵
+          Less than a chai per week. Ace your exams with PrepIQ. 🍵
         </p>
         {/* Generate info box */}
         <div style={{

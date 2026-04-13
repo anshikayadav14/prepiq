@@ -11,36 +11,33 @@ export default function Dashboard() {
   const [user, setUser] = useState(null)
   const [userData, setUserData] = useState(null)
   const [loading, setLoading] = useState(true)
-  const router = useRouter()
-  const supabase = createClient()
 
   useEffect(() => {
+    const supabase = createClient()
+
     async function loadUser() {
       try {
-        const { data: { session } } = await supabase.auth.getSession()
-        console.log('Session:', session)
-        
-        if (!session) {
+        const { data: { user } } = await supabase.auth.getUser()
+
+        if (!user) {
           window.location.href = '/auth'
           return
         }
-        
-        setUser(session.user)
+
+        setUser(user)
 
         const { data, error } = await supabase
           .from('users')
           .select('*')
-          .eq('id', session.user.id)
+          .eq('id', user.id)
           .single()
-
-        console.log('User data:', data, error)
 
         if (data) {
           setUserData(data)
         } else {
           const newUser = {
-            id: session.user.id,
-            email: session.user.email,
+            id: user.id,
+            email: user.email,
             plan: 'free',
             generates_used: 0,
             generates_reset_date: new Date().toISOString()
@@ -53,10 +50,12 @@ export default function Dashboard() {
       }
       setLoading(false)
     }
+
     loadUser()
   }, [])
 
   async function handleLogout() {
+    const supabase = createClient()
     await supabase.auth.signOut()
     window.location.href = '/'
   }
@@ -195,7 +194,7 @@ export default function Dashboard() {
           borderRadius: '12px', padding: '16px',
           color: 'rgba(255,255,255,0.4)', fontSize: '0.8rem', textAlign: 'center'
         }}>
-          Generates reset on the 1st of every month
+      
         </div>
       </div>
     </div>

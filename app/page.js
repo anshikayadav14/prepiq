@@ -33,15 +33,11 @@ export default function Home() {
     <main style={{ minHeight: '100vh', background: '#05050a', color: '#f0eeff', fontFamily: 'sans-serif', display: 'flex', flexDirection: 'column' }}>
 
       {/* Nav */}
-      <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <span style={{ fontWeight: '800', fontSize: '1.25rem', letterSpacing: '-0.05em' }}>
-          Prep<span style={{ color: '#a29bfe' }}>iq</span>
-        </span>
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.72rem', color: 'rgba(240,238,255,0.4)', fontWeight: '600' }}>AI-powered exam notes</span>
-          <span style={{ background: 'rgba(85,239,196,0.1)', border: '1px solid rgba(85,239,196,0.25)', color: '#55efc4', fontSize: '0.62rem', fontWeight: '700', padding: '0.18rem 0.5rem', borderRadius: '100px' }}>FREE</span>
-        </div>
-      </nav>
+<nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '1rem 2rem', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+  <span style={{ fontWeight: '800', fontSize: '1.25rem', letterSpacing: '-0.05em' }}>
+    Prep<span style={{ color: '#a29bfe' }}>IQ</span>
+  </span>
+</nav>
 
       {/* Hero */}
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '3rem 1.5rem 2rem', textAlign: 'center' }}>
@@ -57,7 +53,7 @@ export default function Home() {
         </h1>
 
         <p style={{ fontSize: '1rem', color: 'rgba(240,238,255,0.5)', maxWidth: '480px', lineHeight: '1.75', marginBottom: '2.5rem' }}>
-          Messy PDF, random notes, or a website link — Prepiq converts it into detailed topper-style answers, MCQs, flashcards, and last-minute notes.
+          Messy PDF, random notes, or a website link — PrepIQ converts it into detailed topper-style answers, MCQs, flashcards, and last-minute notes.
         </p>
 
         {/* Exam Selector Card */}
@@ -148,7 +144,7 @@ export default function Home() {
       </div>
 
       <div style={{ textAlign: 'center', padding: '1rem', fontSize: '0.68rem', color: 'rgba(240,238,255,0.2)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-        Prepiq · prepiq.in · For personal study use only
+        PrepIQ · prepiq.in · For personal study use only
       </div>
 
     </main>
