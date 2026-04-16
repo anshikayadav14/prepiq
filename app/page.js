@@ -69,7 +69,7 @@ export default function Home() {
           animation: 'burstOut 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards',
         }}>
           <span style={{ color: '#f0eeff' }}>Prep</span>
-          <span style={{ color: '#a29bfe' }}>iq</span>
+          <span style={{ color: '#a29bfe' }}>IQ</span>
         </div>
       </div>
 
