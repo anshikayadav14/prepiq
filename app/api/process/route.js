@@ -131,8 +131,62 @@ function detectSubjectType(text) {
     networks: ['osi', 'tcp', 'ip', 'http', 'dns', 'routing', 'switching',
       'protocol', 'subnet', 'mac address', 'bandwidth', 'latency',
       'firewall', 'socket', 'congestion', 'sliding window'],
-  }
 
+    ml_ai: ['neural network', 'machine learning', 'deep learning', 'natural language processing',
+      'nlp', 'tokenization', 'transformer', 'bert', 'gpt', 'sentiment analysis',
+      'classification', 'regression', 'clustering', 'feature extraction', 'training data',
+      'overfitting', 'underfitting', 'gradient descent', 'backpropagation', 'epoch',
+      'convolutional', 'recurrent', 'lstm', 'attention mechanism', 'word embedding',
+      'word2vec', 'tf-idf', 'bag of words', 'named entity', 'pos tagging',
+      'supervised learning', 'unsupervised learning', 'reinforcement learning',
+      'random forest', 'svm', 'support vector', 'decision tree', 'naive bayes',
+      'precision', 'recall', 'f1 score', 'confusion matrix', 'corpus', 'vocabulary'],
+
+    software_eng: ['sdlc', 'agile', 'scrum', 'waterfall', 'sprint', 'uml',
+      'design pattern', 'solid principles', 'object oriented', 'class diagram',
+      'use case', 'requirement', 'software testing', 'unit test', 'integration test',
+      'version control', 'git', 'ci/cd', 'deployment', 'refactoring',
+      'coupling', 'cohesion', 'mvc', 'api design', 'microservices'],
+
+    comp_arch: ['cache', 'pipeline', 'instruction set', 'registers', 'alu',
+      'cpu', 'fetch decode execute', 'memory hierarchy', 'risc', 'cisc',
+      'clock cycle', 'bus', 'interrupt', 'dma', 'assembly language',
+      'addressing mode', 'branch prediction', 'virtual memory'],
+
+    compiler: ['lexical analysis', 'syntax analysis', 'semantic analysis',
+      'parse tree', 'abstract syntax tree', 'token', 'grammar', 'cfg',
+      'll parser', 'lr parser', 'symbol table', 'intermediate code',
+      'code generation', 'code optimization', 'ambiguous grammar',
+      'first set', 'follow set', 'shift reduce'],
+
+    cyber_security: ['encryption', 'decryption', 'vulnerability', 'attack', 'malware',
+      'phishing', 'firewall', 'intrusion detection', 'authentication', 'authorization',
+      'cryptography', 'rsa', 'aes', 'hash function', 'digital signature',
+      'ssl', 'tls', 'penetration testing', 'cyber threat', 'ransomware'],
+
+    statistics: ['mean', 'median', 'mode', 'variance', 'standard deviation',
+      'hypothesis testing', 'p-value', 'confidence interval', 'correlation',
+      'normal distribution', 'binomial distribution', 'poisson distribution',
+      'chi square', 'anova', 'regression analysis', 'sampling', 'population',
+      'null hypothesis', 'type 1 error', 'type 2 error', 'z test', 't test'],
+
+    sociology: ['society', 'culture', 'norms', 'values', 'institution',
+      'stratification', 'caste', 'class', 'gender', 'social mobility',
+      'socialization', 'deviance', 'social control', 'collective behavior',
+      'urbanization', 'industrialization', 'social change', 'marx', 'durkheim', 'weber'],
+
+    business: ['marketing', 'management', 'hrm', 'entrepreneurship', 'branding',
+      'consumer behavior', 'market segmentation', 'swot', 'pestle',
+      'supply chain', 'logistics', 'inventory', 'revenue', 'profit margin',
+      'business model', 'startup', 'venture capital', 'stakeholder',
+      'corporate governance', 'csr'],
+
+    environment: ['pollution', 'carbon emission', 'biodiversity', 'deforestation',
+      'climate change', 'greenhouse gas', 'ozone layer', 'sustainability',
+      'renewable energy', 'fossil fuel', 'habitat', 'endangered species',
+      'food chain', 'carbon cycle', 'water cycle', 'global warming',
+      'paris agreement', 'kyoto protocol'],
+  }
   const counts = {}
   for (const [subject, words] of Object.entries(signals)) {
     counts[subject] = words.filter(w => lower.includes(w)).length
@@ -540,7 +594,34 @@ COMPUTER NETWORKS:
 `
     if (examProfile === 'gate') i += `- GATE: subnetting numericals + sliding window problems + routing algorithm steps.\n`
   }
-
+  if (subjectType === 'ml_ai') {
+    i += `ML/AI/NLP: Every technique/algorithm = separate point. Named models (BERT,GPT,Word2Vec,TF-IDF,CNN,RNN,LSTM) = separate points. Every pipeline stage separately. Every metric: formula+meaning. Comparisons if both in source. Diagrams in diagramCue.
+CRITICAL FOR NLP: If source has numbered/categorized technique sections (Text Processing, Syntax, Semantic, Information Extraction, Language Generation, Speech Processing, Question Answering, Dialogue Systems) — EACH category AND each technique within it = separate topic. Never merge categories.\n`
+  }
+  if (subjectType === 'software_eng') {
+    i += `SOFTWARE ENG: Every SDLC phase separately. Design patterns: name+problem+solution. SOLID: each principle separately. Testing types each defined. UML diagrams in diagramCue.\n`
+  }
+  if (subjectType === 'comp_arch') {
+    i += `COMP ARCH: Every component: function+connections. Pipeline stages+hazards separately. Memory hierarchy each level. Numericals: show all steps. Diagrams in diagramCue.\n`
+  }
+  if (subjectType === 'compiler') {
+    i += `COMPILER: Every phase: input+output+function. Grammar+parsing separately. FIRST/FOLLOW: definition+example. Parse table steps. Diagrams in diagramCue.\n`
+  }
+  if (subjectType === 'cyber_security') {
+    i += `CYBER SEC: Every attack: definition+how+prevention. Crypto algorithms separately. Every protocol: layer+use. Auth vs AuthZ distinction. Diagrams in diagramCue.\n`
+  }
+  if (subjectType === 'statistics') {
+    i += `STATISTICS: Every formula: variables+conditions. Distributions: shape+parameters+example. Hypothesis testing: full procedure. Every test separately. Numericals: all steps.\n`
+  }
+  if (subjectType === 'sociology') {
+    i += `SOCIOLOGY: Every theory: theorist+idea+concepts+criticism. Every concept: definition+Indian example. Contemporary India connect.\n`
+  }
+  if (subjectType === 'business') {
+    i += `BUSINESS: Every concept: definition+Indian company example. Frameworks: each component separately. Management functions each separately. Marketing mix each P separately.\n`
+  }
+  if (subjectType === 'environment') {
+    i += `ENVIRONMENT: Every issue: cause+effect+solution. Every cycle: step-by-step. Treaties: name+year+provisions. Data/stats from source. Diagrams in diagramCue.\n`
+  }
   return i
 }
 
@@ -600,7 +681,7 @@ function getMaxTokens(mode, totalChunks, plan) {
   if (mode === 'mcq') return 6000  
   if (mode === 'quick-revision') return 4500
   if (mode === 'pyq') return 7000
-  if (mode === 'exam-notes') return 12000
+  if (mode === 'exam-notes') return 8000
   return 5000
 }
 
@@ -1054,20 +1135,7 @@ TOPPER STYLE RULE: Write every answer like a topper writes in exam:
 
 MARKS BREAKDOWN RULE: In examinerTip, always mention exact marks breakdown. Example: "Definition: 2 marks | Key points: 4 marks | Example: 2 marks | Conclusion: 2 marks"
 
-REAL WORLD EXAMPLES RULE (subject-specific, INDIA-FOCUSED):
-- Physics/Math: ISRO rockets, Indian Railways, bridges, engineering
-- Chemistry: medicines like Paracetamol, Tata chemicals, food industry
-- Biology: diseases like Malaria/TB in India, AIIMS, farming
-- History/UPSC: connect to current India — CAA, Article 370, recent elections
-- DSA/CS: Zomato, Swiggy, Paytm, IRCTC, Google India use cases
-- Psychology: CBSE students, JEE stress, Indian family dynamics
-- Economics: RBI policy, Union Budget, PM schemes like PM-KISAN, GST
-- Accounts/CA: Tata, Reliance, Infosys real balance sheet examples
-- Polity: Supreme Court judgments, recent bills passed in Parliament
-- Geography: Indian rivers, monsoon, Indian states
-- General: relatable daily life examples from Indian context
-MANDATORY REAL WORLD EXAMPLE RULE: Every topic MUST have one dedicated point:
-"🌍 Real World Example (2 marks): [specific relatable example for Indian students]"
+REAL WORLD EXAMPLE RULE: Every topic MUST include one India-focused real world example point. Physics: ISRO/Railways. Bio: diseases/AIIMS. DSA: Zomato/Google. Chem: medicines/industry. History/Polity: current India events. Eco: RBI/Budget/schemes.
 Examples format:
 - Physics: "Newton's First Law — why you jerk forward when bus brakes suddenly (inertia). Used in car seat belts."
 - Biology: "Photosynthesis — why plants near windows grow better. Used in farming to maximize crop yield."
@@ -1085,7 +1153,13 @@ UPSC FORMAT RULE: For UPSC exam profile, every idealAnswer must follow:
 
 CORE MISSION: A student must be able to write a FULL MARKS exam answer using ONLY your output. Miss nothing important.
 
-COVERAGE MANDATE: You MUST cover EVERY distinct topic, subtopic, concept, and named section present in this chunk. Do not skip anything. If chunk has 10 topics, output must have 10 topics minimum. Count topics in source, match in output. Never merge two separate topics into one.
+COVERAGE MANDATE — FOLLOW THESE STEPS IN ORDER:
+STEP 1 — FILTER: First identify and mentally REMOVE these sections from consideration: "Check Your Progress", "Glossary", "Summary", "Recap", "Review Questions", "Exercise", "Fill in the Blanks", "True/False", "Answers". These must NEVER become topics.
+STEP 2 — SCAN: From remaining content only, list every section heading, numbered item, technique, algorithm, concept, and named term.
+STEP 3 — COUNT: Count how many distinct topics/items you found in Step 2.
+STEP 4 — GENERATE: Create one topic entry for EACH item from Step 2. Your output topic count must match your Step 3 count.
+STEP 5 — VERIFY: Confirm no item from Step 2 is missing AND no item from Step 1 is included.
+NEVER skip, merge, or summarize multiple items into one. If source has 10 techniques listed, output must have 10 separate topic entries.
 
 DEDUPLICATION RULE: This is Part ${chunkIndex + 1} of ${totalChunks}. Do NOT repeat exact same topics from previous parts. BUT if source has a NEW subtopic or deeper angle on a previous topic — cover it as a SEPARATE NEW topic. Never skip new content just because the broad topic appeared before.
 
