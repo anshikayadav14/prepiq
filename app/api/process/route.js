@@ -985,6 +985,9 @@ ${chunk}
 
 STRICT RULE: ONLY use content present in the uploaded text.
 
+CHARACTERS MANDATORY RULE: Include EVERY named person in passage — author, interviewer, interviewee, all referenced figures. Each = separate character entry with their view/significance.
+PARTS RULE: If source has Part I, Part II — each part = separate plotSummary entry.
+
 Return ONLY valid JSON:
 {
   "subject": "English Literature",
