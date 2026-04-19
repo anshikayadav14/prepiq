@@ -3,7 +3,7 @@ import { cookies } from 'next/headers'
 import { NextResponse } from 'next/server'
 
 export async function GET(request) {
-  const { searchParams, origin } = new URL(request.url)
+  const { searchParams } = new URL(request.url)
   const code = searchParams.get('code')
   const next = searchParams.get('next') ?? '/dashboard'
 
@@ -35,9 +35,9 @@ export async function GET(request) {
           generates_reset_date: new Date().toISOString()
         }, { onConflict: 'id', ignoreDuplicates: true })
       }
-      return NextResponse.redirect(`${origin}${next}`)
+      return NextResponse.redirect(`https://prepiqai.in${next}`)
     }
   }
 
-  return NextResponse.redirect(`${origin}/auth?error=callback_error`)
+  return NextResponse.redirect(`https://prepiqai.in/auth?error=callback_error`)
 }
