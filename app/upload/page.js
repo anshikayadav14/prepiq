@@ -477,7 +477,7 @@ if (mode === 'pyq' && noteFiles.length === 0 && !hasValidUrl) { setError('Please
             <button key={m.id}
               onClick={() => { setMode(m.id); setResult(null); setError(null); setPageLimitData(null); setFromCache(false) }}
               
-onTouchEnd={(e) => { const diff = Math.abs(e.changedTouches[0].clientY - touchStartY); if (diff < 50) { e.preventDefault(); setMode(m.id); setResult(null); setError(null); setPageLimitData(null); setFromCache(false) } }}
+onTouchEnd={(e) => { const diff = Math.abs(e.changedTouches[0].clientY - touchStartY); if (diff < 50) { setMode(m.id); setResult(null); setError(null); setPageLimitData(null); setFromCache(false) } }}
               style={{ display: 'flex', alignItems: 'center', gap: '0.7rem', padding: '0.65rem 0.85rem', borderRadius: '10px', border: mode === m.id ? `1.5px solid ${m.color}40` : '1.5px solid rgba(255,255,255,0.07)', background: mode === m.id ? `${m.color}10` : '#13131e', cursor: 'pointer', textAlign: 'left', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}>
               <span style={{ fontSize: '1.2rem' }}>{m.icon}</span>
               <div style={{ flex: 1 }}>
