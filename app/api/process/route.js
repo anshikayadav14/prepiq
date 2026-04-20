@@ -1711,12 +1711,12 @@ export async function POST(request) {
     console.log(`Subject: ${subjectType} | Exam: ${examProfile} | Gap fill: ${fillGaps}`)
 
     // Dynamic chunk size based on plan
-    let chunkSize = 20000
-    if (effectivePlan !== 'free') {
-      if (estimatedPages <= 25) chunkSize = 20000
-      else if (estimatedPages <= 75) chunkSize = 20000
-      else chunkSize = 25000
-    }
+    let chunkSize = 12000
+if (effectivePlan !== 'free') {
+  if (estimatedPages <= 25) chunkSize = 12000
+  else if (estimatedPages <= 75) chunkSize = 15000
+  else chunkSize = 18000
+}
 
     const allChunks = chunkText(content, chunkSize)
     const chunksNeeded = allChunks.length
