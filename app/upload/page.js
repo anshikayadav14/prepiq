@@ -217,7 +217,7 @@ function MCQCard({ q, i }) {
             <button key={opt}
               onClick={() => !answered && setSelected(opt)}
               onTouchStart={(e) => setTouchStartY(e.touches[0].clientY)}
-onTouchEnd={(e) => { const diff = Math.abs(e.changedTouches[0].clientY - touchStartY); if (diff < 10) { e.preventDefault(); if (!answered) setSelected(opt) } }}
+onTouchEnd={(e) => { const diff = Math.abs(e.changedTouches[0].clientY - touchStartY); if (diff < 20) { e.preventDefault(); if (!answered) setSelected(opt) } }}
               style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', width: '100%', padding: '0.6rem 0.85rem', borderRadius: '8px', border: `1.5px solid ${border}`, background: bg, color, fontSize: '0.82rem', fontWeight: isCorrect && answered ? '700' : '500', cursor: answered ? 'default' : 'pointer', marginBottom: '0.4rem', textAlign: 'left', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}>
               <span style={{ fontWeight: '800', minWidth: '1.2rem' }}>{opt}.</span>
               <span style={{ flex: 1 }}>{q.options[opt]}</span>
@@ -477,7 +477,7 @@ if (mode === 'pyq' && noteFiles.length === 0 && !hasValidUrl) { setError('Please
             <button key={m.id}
               onClick={() => { setMode(m.id); setResult(null); setError(null); setPageLimitData(null); setFromCache(false) }}
               onTouchStart={(e) => setTouchStartY(e.touches[0].clientY)}
-onTouchEnd={(e) => { const diff = Math.abs(e.changedTouches[0].clientY - touchStartY); if (diff < 10) { e.preventDefault(); setMode(m.id); setResult(null); setError(null); setPageLimitData(null); setFromCache(false) } }}
+onTouchEnd={(e) => { const diff = Math.abs(e.changedTouches[0].clientY - touchStartY); if (diff < 20) { e.preventDefault(); setMode(m.id); setResult(null); setError(null); setPageLimitData(null); setFromCache(false) } }}
               style={{ display: 'flex', alignItems: 'center', gap: '0.7rem', padding: '0.65rem 0.85rem', borderRadius: '10px', border: mode === m.id ? `1.5px solid ${m.color}40` : '1.5px solid rgba(255,255,255,0.07)', background: mode === m.id ? `${m.color}10` : '#13131e', cursor: 'pointer', textAlign: 'left', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}>
               <span style={{ fontSize: '1.2rem' }}>{m.icon}</span>
               <div style={{ flex: 1 }}>
@@ -726,7 +726,7 @@ onTouchEnd={(e) => { const diff = Math.abs(e.changedTouches[0].clientY - touchSt
               <div style={{ display: 'flex', background: '#0d0d15', borderBottom: '1px solid rgba(255,255,255,0.07)', padding: '0 0.8rem', overflowX: 'auto' }}>
                 {getTabsForMode(result).map(tab => (
                   <button key={tab.id} onClick={() => setActiveTab(tab.id)} onTouchStart={(e) => setTouchStartY(e.touches[0].clientY)}
-onTouchEnd={(e) => { const diff = Math.abs(e.changedTouches[0].clientY - touchStartY); if (diff < 10) { e.preventDefault(); setActiveTab(tab.id) } }}
+onTouchEnd={(e) => { const diff = Math.abs(e.changedTouches[0].clientY - touchStartY); if (diff < 20) { e.preventDefault(); setActiveTab(tab.id) } }}
                     style={{ padding: '0.6rem 0.75rem', fontSize: '0.72rem', fontWeight: '600', color: activeTab === tab.id ? '#a29bfe' : 'rgba(240,238,255,0.38)', borderTop: 'none', borderLeft: 'none', borderRight: 'none', borderBottom: activeTab === tab.id ? '2px solid #6c5ce7' : '2px solid transparent', background: 'none', cursor: 'pointer', whiteSpace: 'nowrap', touchAction: 'manipulation', WebkitTapHighlightColor: 'transparent' }}>
                     {tab.label}
                   </button>
@@ -1068,7 +1068,7 @@ onTouchEnd={(e) => { const diff = Math.abs(e.changedTouches[0].clientY - touchSt
                   <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(auto-fill, minmax(260px, 1fr))', gap: '0.85rem' }}>
                     {result.flashcards?.map((f, i) => (
                       <div key={i} onClick={() => toggleFlip(i)} onTouchStart={(e) => setTouchStartY(e.touches[0].clientY)}
-onTouchEnd={(e) => { const diff = Math.abs(e.changedTouches[0].clientY - touchStartY); if (diff < 10) { e.preventDefault(); toggleFlip(i) } }} style={{ cursor: 'pointer', perspective: '800px', height: '160px', touchAction: 'manipulation' }}>
+onTouchEnd={(e) => { const diff = Math.abs(e.changedTouches[0].clientY - touchStartY); if (diff < 20) { e.preventDefault(); toggleFlip(i) } }} style={{ cursor: 'pointer', perspective: '800px', height: '160px', touchAction: 'manipulation' }}>
                         <div style={{ position: 'relative', width: '100%', height: '100%', transformStyle: 'preserve-3d', transform: flipped[i] ? 'rotateY(180deg)' : 'rotateY(0)', transition: 'transform 0.4s ease' }}>
                           <div style={{ position: 'absolute', inset: 0, backfaceVisibility: 'hidden', background: '#13131e', border: '1px solid rgba(108,92,231,0.25)', borderRadius: '12px', padding: '1rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                             <div style={{ fontSize: '0.62rem', fontWeight: '700', color: '#a29bfe', textTransform: 'uppercase', letterSpacing: '0.07em' }}>{f.topic}</div>
