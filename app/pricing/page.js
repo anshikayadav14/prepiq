@@ -107,13 +107,13 @@ export default function PricingPage() {
     try {
       // Load Razorpay script
       await new Promise((resolve, reject) => {
-        if (window.Razorpay) { resolve(); return }
-        const script = document.createElement('script')
-        script.src = 'https://checkout.razorpay.com/v1/checkout.js'
-        script.onload = resolve
-        script.onerror = reject
-        document.body.appendChild(script)
-      })
+  if (window.Razorpay) { resolve(); return }
+  const script = document.createElement('script')
+  script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+  script.onload = () => resolve()
+  script.onerror = () => reject(new Error('Razorpay script failed'))
+  document.head.appendChild(script)
+})
 
       // Create order
       const res = await fetch('/api/create-order', {
