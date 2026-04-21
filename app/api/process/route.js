@@ -1635,10 +1635,31 @@ export async function POST(request) {
       userData = data
     }
 
-    // ─── USAGE LIMIT CHECK ────────────────────────────────────────────────────
+    // ─── PLAN EXPIRY CHECK ────────────────────────────────────────────────────────
     if (user.email !== DEV_EMAIL) {
+      const now = new Date()
+      const planExpiry = userData?.plan_expiry ? new Date(userData.plan_expiry) : null
+      const currentPlan = userData?.plan || 'free'
+
+      // Auto downgrade if expired
+      if (planExpiry && planExpiry < now && currentPlan !== 'free') {
+        await supabaseClient
+          .from('users')
+          .update({
+            plan: 'free',
+            plan_status: 'expired',
+            generates_used: 0,
+            generates_reset_date: now.toISOString()
+          })
+          .eq('id', user.id)
+
+        userData = { ...userData, plan: 'free', generates_used: 0 }
+      }
+
+      // ─── USAGE LIMIT CHECK ──────────────────────────────────────────────────
       const GENERATE_LIMITS = { free: 4, weekly: 10, pro: 30, promax: 50 }
-      const userLimit = GENERATE_LIMITS[userData?.plan || 'free']
+      const effectivePlanForLimit = userData?.plan || 'free'
+      const userLimit = GENERATE_LIMITS[effectivePlanForLimit]
       const used = userData?.generates_used || 0
 
       if (used >= userLimit) {

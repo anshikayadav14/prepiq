@@ -66,35 +66,13 @@ const plans = [
     ],
     cta: 'Get Pro',
     popular: true
-  },
-  {
-    id: 'promax',
-    name: 'Pro Max',
-    price: '₹299',
-    period: 'per month',
-    generates: '50 generates/month',
-    pages: 'Up to 150 pages',
-    ai: 'Best AI',
-    color: '#f59e0b',
-    features: [
-      '50 generates per month',
-      'Up to 150 pages per upload',
-      'All 5 study modes',
-      'PDF download',
-      'Best AI',
-      'Smart 24hr caching',
-      'Fastest output',
-      'Priority support',
-      'Early access to new features',
-    ],
-    cta: 'Get Pro Max',
-    popular: false
   }
 ]
 
 export default function PricingPage() {
   const [currentPlan, setCurrentPlan] = useState('free')
   const [loading, setLoading] = useState(true)
+  const [paymentLoading, setPaymentLoading] = useState(false)
   const [user, setUser] = useState(null)
   const router = useRouter()
 
@@ -116,13 +94,92 @@ export default function PricingPage() {
     loadUser()
   }, [])
 
-  function handleCTA(planId) {
+  async function handleCTA(planId) {
     if (!user) {
       router.push('/auth')
       return
     }
     if (planId === 'free') return
-    alert('Payment coming soon! Razorpay integration in progress.')
+    if (currentPlan === planId) return
+
+    setPaymentLoading(true)
+
+    try {
+      // Load Razorpay script
+      await new Promise((resolve, reject) => {
+        if (window.Razorpay) { resolve(); return }
+        const script = document.createElement('script')
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+        script.onload = resolve
+        script.onerror = reject
+        document.body.appendChild(script)
+      })
+
+      // Create order
+      const res = await fetch('/api/create-order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ plan: planId })
+      })
+      const data = await res.json()
+
+      if (!data.success) {
+        alert('Something went wrong. Please try again.')
+        setPaymentLoading(false)
+        return
+      }
+
+      // Open Razorpay checkout
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: data.amount,
+        currency: 'INR',
+        name: 'PrepIQ',
+        description: planId === 'weekly' ? 'Weekly Plan - ₹49/week' : 'Pro Plan - ₹149/month',
+        order_id: data.orderId,
+        prefill: {
+          email: user.email,
+        },
+        theme: {
+          color: planId === 'weekly' ? '#60a5fa' : '#34d399'
+        },
+        handler: async function(response) {
+          // Verify payment
+          const verifyRes = await fetch('/api/verify-payment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              razorpay_order_id: response.razorpay_order_id,
+              razorpay_payment_id: response.razorpay_payment_id,
+              razorpay_signature: response.razorpay_signature,
+              plan: planId
+            })
+          })
+          const verifyData = await verifyRes.json()
+
+          if (verifyData.success) {
+            alert(`🎉 Payment successful! ${planId === 'weekly' ? 'Weekly' : 'Pro'} plan activated!`)
+            router.push('/dashboard')
+          } else {
+            alert('Payment verification failed. Please contact support.')
+          }
+        },
+        modal: {
+          ondismiss: function() {
+            setPaymentLoading(false)
+          }
+        }
+      }
+
+      const rzp = new window.Razorpay(options)
+      rzp.open()
+
+    } catch (err) {
+      console.error('Payment error:', err)
+      alert('Something went wrong. Please try again.')
+    }
+
+    setPaymentLoading(false)
   }
 
   return (
@@ -192,7 +249,6 @@ export default function PricingPage() {
         <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1.1rem', margin: '0 0 16px' }}>
           Less than a chai per week. Ace your exams with PrepIQ. 🍵
         </p>
-        {/* Generate info box */}
         <div style={{
           display: 'inline-block',
           background: 'rgba(167,139,250,0.08)',
@@ -211,10 +267,10 @@ export default function PricingPage() {
 
       {/* Plans Grid */}
       <div style={{
-        maxWidth: '1100px',
+        maxWidth: '900px',
         margin: '0 auto',
         display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
         gap: '24px'
       }}>
         {plans.map(plan => {
@@ -228,64 +284,42 @@ export default function PricingPage() {
                 borderRadius: '20px',
                 padding: '28px',
                 position: 'relative',
-                transition: 'transform 0.2s',
               }}
             >
-              {/* Popular badge */}
               {plan.popular && (
                 <div style={{
-                  position: 'absolute',
-                  top: '-12px',
-                  left: '50%',
+                  position: 'absolute', top: '-12px', left: '50%',
                   transform: 'translateX(-50%)',
                   background: `linear-gradient(135deg, ${plan.color}, ${plan.color}99)`,
-                  color: 'white',
-                  padding: '4px 16px',
-                  borderRadius: '20px',
-                  fontSize: '0.75rem',
-                  fontWeight: '700',
-                  whiteSpace: 'nowrap'
+                  color: 'white', padding: '4px 16px', borderRadius: '20px',
+                  fontSize: '0.75rem', fontWeight: '700', whiteSpace: 'nowrap'
                 }}>⭐ Most Popular</div>
               )}
 
-              {/* Current plan badge */}
               {isCurrentPlan && (
                 <div style={{
-                  position: 'absolute',
-                  top: '-12px',
-                  right: '20px',
-                  background: 'rgba(255,255,255,0.1)',
-                  color: 'rgba(255,255,255,0.7)',
-                  padding: '4px 12px',
-                  borderRadius: '20px',
-                  fontSize: '0.7rem',
-                  fontWeight: '600'
+                  position: 'absolute', top: '-12px', right: '20px',
+                  background: 'rgba(255,255,255,0.1)', color: 'rgba(255,255,255,0.7)',
+                  padding: '4px 12px', borderRadius: '20px',
+                  fontSize: '0.7rem', fontWeight: '600'
                 }}>✓ Active</div>
               )}
 
-              {/* Plan name */}
               <div style={{
-                color: plan.color,
-                fontWeight: '700',
-                fontSize: '0.9rem',
-                marginBottom: '8px',
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em'
+                color: plan.color, fontWeight: '700', fontSize: '0.9rem',
+                marginBottom: '8px', textTransform: 'uppercase', letterSpacing: '0.05em'
               }}>{plan.name}</div>
 
-              {/* Price */}
               <div style={{ marginBottom: '4px' }}>
                 <span style={{ fontSize: '2.5rem', fontWeight: '800' }}>{plan.price}</span>
                 <span style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', marginLeft: '6px' }}>/{plan.period}</span>
               </div>
 
-              {/* Generates + Pages quick info */}
               <div style={{ marginBottom: '20px', display: 'flex', flexDirection: 'column', gap: '3px' }}>
                 <div style={{ fontSize: '0.78rem', color: plan.color, fontWeight: '600' }}>{plan.generates}</div>
                 <div style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.4)' }}>{plan.pages} · {plan.ai}</div>
               </div>
 
-              {/* Features */}
               <div style={{ marginBottom: '24px', display: 'flex', flexDirection: 'column', gap: '10px' }}>
                 {plan.features.map((feature, i) => (
                   <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.85rem', color: 'rgba(255,255,255,0.7)' }}>
@@ -295,14 +329,11 @@ export default function PricingPage() {
                 ))}
               </div>
 
-              {/* CTA Button */}
               <button
                 onClick={() => handleCTA(plan.id)}
-                disabled={isCurrentPlan}
+                disabled={isCurrentPlan || paymentLoading}
                 style={{
-                  width: '100%',
-                  padding: '12px',
-                  borderRadius: '12px',
+                  width: '100%', padding: '12px', borderRadius: '12px',
                   border: isCurrentPlan ? `1px solid ${plan.color}40` : 'none',
                   background: isCurrentPlan
                     ? 'transparent'
@@ -311,12 +342,12 @@ export default function PricingPage() {
                     : `${plan.color}20`,
                   color: isCurrentPlan ? plan.color : plan.popular ? 'white' : plan.color,
                   fontWeight: '700',
-                  cursor: isCurrentPlan ? 'default' : 'pointer',
+                  cursor: isCurrentPlan || paymentLoading ? 'default' : 'pointer',
                   fontSize: '0.9rem',
-                  transition: 'all 0.2s'
+                  opacity: paymentLoading ? 0.7 : 1
                 }}
               >
-                {isCurrentPlan ? '✓ Current Plan' : plan.cta}
+                {isCurrentPlan ? '✓ Current Plan' : paymentLoading ? 'Loading...' : plan.cta}
               </button>
             </div>
           )
@@ -325,11 +356,8 @@ export default function PricingPage() {
 
       {/* Footer note */}
       <div style={{
-        textAlign: 'center',
-        marginTop: '48px',
-        color: 'rgba(255,255,255,0.3)',
-        fontSize: '0.8rem',
-        lineHeight: '2'
+        textAlign: 'center', marginTop: '48px',
+        color: 'rgba(255,255,255,0.3)', fontSize: '0.8rem', lineHeight: '2'
       }}>
         <p>All prices include GST. Secure payments via Razorpay.</p>
         <p>Weekly and Pro plans cannot be active simultaneously.</p>
