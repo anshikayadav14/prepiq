@@ -46,11 +46,12 @@ export async function POST(request) {
       body: JSON.stringify({
         amount,
         currency: 'INR',
-        receipt: `receipt_${user.id}_${Date.now()}`
+        receipt: `r_${Date.now()}`
       })
     })
 
     const order = await orderRes.json()
+    console.log('Razorpay order response:', JSON.stringify(order))
 
     if (!order.id) {
       return Response.json({ success: false, error: 'Order creation failed' }, { status: 500 })

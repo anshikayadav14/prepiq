@@ -103,28 +103,18 @@ export default function PricingPage() {
     if (currentPlan === planId) return
 
     setPaymentLoading(true)
-
+    
     try {
-      // Load Razorpay script
-      await new Promise((resolve, reject) => {
-  if (window.Razorpay) { resolve(); return }
-  const script = document.createElement('script')
-  script.src = 'https://checkout.razorpay.com/v1/checkout.js'
-  script.onload = () => resolve()
-  script.onerror = () => reject(new Error('Razorpay script failed'))
-  document.head.appendChild(script)
-})
-
-      // Create order
       const res = await fetch('/api/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan: planId })
       })
       const data = await res.json()
-
+      console.log('Order response:', data)
+      
       if (!data.success) {
-        alert('Something went wrong. Please try again.')
+        alert('Order failed: ' + data.error)
         setPaymentLoading(false)
         return
       }
