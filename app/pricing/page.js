@@ -103,23 +103,32 @@ export default function PricingPage() {
     if (currentPlan === planId) return
 
     setPaymentLoading(true)
-    
+
     try {
+      // Load Razorpay script
+      await new Promise((resolve, reject) => {
+        const existing = document.querySelector('script[src*="razorpay"]')
+        if (existing) existing.remove()
+        const script = document.createElement('script')
+        script.src = 'https://checkout.razorpay.com/v1/checkout.js'
+        script.onload = () => setTimeout(resolve, 300)
+        script.onerror = () => reject(new Error('Script failed'))
+        document.head.appendChild(script)
+      })
+
       const res = await fetch('/api/create-order', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ plan: planId })
       })
       const data = await res.json()
-      console.log('Order response:', data)
-      
+
       if (!data.success) {
-        alert('Order failed: ' + data.error)
+        alert('Something went wrong. Please try again.')
         setPaymentLoading(false)
         return
       }
 
-      // Open Razorpay checkout
       const options = {
         key: 'rzp_live_SgDfaBjTFUpUdx',
         amount: data.amount,
@@ -127,14 +136,9 @@ export default function PricingPage() {
         name: 'PrepIQ',
         description: planId === 'weekly' ? 'Weekly Plan - ₹49/week' : 'Pro Plan - ₹149/month',
         order_id: data.orderId,
-        prefill: {
-          email: user.email,
-        },
-        theme: {
-          color: planId === 'weekly' ? '#60a5fa' : '#34d399'
-        },
+        prefill: { email: user.email },
+        theme: { color: planId === 'weekly' ? '#60a5fa' : '#34d399' },
         handler: async function(response) {
-          // Verify payment
           const verifyRes = await fetch('/api/verify-payment', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -146,7 +150,6 @@ export default function PricingPage() {
             })
           })
           const verifyData = await verifyRes.json()
-
           if (verifyData.success) {
             alert(`🎉 Payment successful! ${planId === 'weekly' ? 'Weekly' : 'Pro'} plan activated!`)
             router.push('/dashboard')
@@ -167,9 +170,8 @@ export default function PricingPage() {
     } catch (err) {
       console.error('Payment error:', err)
       alert('Something went wrong. Please try again.')
+      setPaymentLoading(false)
     }
-
-    setPaymentLoading(false)
   }
 
   return (
