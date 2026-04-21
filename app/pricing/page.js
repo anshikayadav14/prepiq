@@ -131,7 +131,7 @@ export default function PricingPage() {
 
       // Open Razorpay checkout
       const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        key: 'rzp_live_SgDfaBjTFUpUdx',
         amount: data.amount,
         currency: 'INR',
         name: 'PrepIQ',
