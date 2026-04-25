@@ -400,7 +400,33 @@ if (mode === 'pyq' && noteFiles.length === 0 && !hasValidUrl) { setError('Please
       }
     } catch (err) {
       clearInterval(interval)
-      setError(err.message || 'Unexpected error.')
+      // Auto retry once
+      try {
+        const formData2 = new FormData()
+        formData2.append('exam', exam)
+        formData2.append('mode', mode)
+        formData2.append('plan', userPlan)
+        formData2.append('processPages', forcePartial ? 'partial' : 'full')
+        for (const file of noteFiles) formData2.append('notes', file)
+        if (sylFile) { const text = await sylFile.text(); formData2.append('syllabus', text) }
+        for (const url of urls) { if (url.trim()) formData2.append('urls', url.trim()) }
+        for (const file of pyqFiles) formData2.append('pyqFiles', file)
+
+        const res2 = await fetch('/api/process', { method: 'POST', body: formData2 })
+        const data2 = await res2.json()
+
+        if (data2.success) {
+          setResult(data2.data); setActiveTab('main')
+          setSubjectType(data2.subjectType || 'general')
+          const cacheKey = getCacheKey(noteFiles, urls, mode)
+          saveToCache(cacheKey, data2.data)
+          if (userEmail !== DEV_EMAIL) setGeneratesUsed(prev => prev + 1)
+        } else {
+          setError(data2.error || 'Something went wrong. Please try again.')
+        }
+      } catch (err2) {
+        setError('Something went wrong. Please try again.')
+      }
     } finally {
       setLoading(false)
     }
