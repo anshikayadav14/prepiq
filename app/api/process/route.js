@@ -56,7 +56,9 @@ function detectSubjectType(text) {
 
     prose: ['character', 'narrator', 'protagonist', 'antagonist', 'plot', 'theme',
       'setting', 'dialogue', 'chapter', 'novel', 'author', 'passage',
-      'extract', 'comprehension', 'short story', 'lesson', 'moral'],
+      'extract', 'comprehension', 'short story', 'lesson', 'moral', 
+      'autobiographical', 'essay', 'personal narrative', 'memoir', 'recount',
+       'incident', 'experience', 'fear', 'overcome'],
 
     math: ['theorem', 'proof', 'derive', 'derivation', 'equation', 'integral',
       'derivative', 'matrix', 'determinant', 'probability', 'trigonometry',
@@ -192,7 +194,7 @@ function detectSubjectType(text) {
     counts[subject] = words.filter(w => lower.includes(w)).length
   }
   const top = Object.entries(counts).sort((a, b) => b[1] - a[1])[0]
-  return top[1] >= 2 ? top[0] : 'general'
+  return top[1] >= 4 ? top[0] : 'general'
 }
 
 // ─── EXAM PROFILE ─────────────────────────────────────────────────────────────
