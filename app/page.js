@@ -326,8 +326,11 @@ export default function Home() {
         </div>
 
         <div style={{ textAlign: 'center', padding: '1rem', fontSize: '0.68rem', color: 'rgba(240,238,255,0.2)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-          PrepIQ · prepiq.in · For personal study use only
-        </div>
+  PrepIQ · prepiqai.in · For personal study use only &nbsp;·&nbsp;
+  <a href="/privacy" style={{ color: 'rgba(240,238,255,0.3)', textDecoration: 'none' }}>Privacy Policy</a>
+  &nbsp;·&nbsp;
+  <a href="/terms" style={{ color: 'rgba(240,238,255,0.3)', textDecoration: 'none' }}>Terms of Service</a>
+</div>
 
       </main>
     </>
