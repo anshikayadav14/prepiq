@@ -1288,8 +1288,8 @@ Return ONLY valid JSON:
   ],
   "questions": [
     {
-      "q": "MANDATORY — Write complete exam question here. Example: 'Explain methods of expressing concentration with examples. (5 marks)' — never leave empty",
-      "marks": 5,
+      "q": "MANDATORY — Write complete exam question with marks in brackets at end. Decide marks based on complexity: definitions = (2 marks), short explanation = (3 marks), detailed = (5 marks), essay = (10 marks). Example: 'What is osmosis? (2 marks)' or 'Explain Van't Hoff factor with examples. (5 marks)'",
+      "marks": 0,
       "priority": "High|Medium|Low",
       "reason": "Why frequently asked",
       "modelAnswer": {
@@ -1734,14 +1734,14 @@ export async function POST(request) {
     console.log(`Subject: ${subjectType} | Exam: ${examProfile} | Gap fill: ${fillGaps}`)
 
     // Dynamic chunk size based on plan
-    let chunkSize = 15000
+    let chunkSize = 8000  // 15000 se 8000
 if (effectivePlan === 'pro' || effectivePlan === 'promax') {
-  chunkSize = 20000
+  chunkSize = 12000   // 20000 se 12000
 }
 
     const allChunks = chunkText(content, chunkSize)
     const chunksNeeded = allChunks.length
-    const maxChunks = effectivePlan === 'free' ? 1 : Math.min(chunksNeeded, 15)
+    const maxChunks = effectivePlan === 'free' ? 1 : Math.min(chunksNeeded, 20) // 15 → 20
     const chunks = allChunks.slice(0, maxChunks)
 
     const pyqSlice = pyqContent.slice(0, 6000)
